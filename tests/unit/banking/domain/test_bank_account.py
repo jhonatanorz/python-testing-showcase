@@ -157,8 +157,14 @@ class TestBankAccountTransfers:
         with pytest.raises(ValidationError):
             funded_account.transfer(50, {"balance": 100})
 
-    def test_should_maintain_balances_when_transfer_amount_is_zero(self, funded_account, empty_account):
+    @patch('banking.domain.bank_account.datetime')
+    def test_should_maintain_balances_when_transfer_amount_is_zero(self, mock_datetime, funded_account, empty_account):
         """Test transferring zero amount does not change either balance."""
+        
+        from datetime import datetime
+        
+        mock_datetime.now.return_value = datetime(2024, month=7, day=8, hour=12)
+        
         initial_source_balance = funded_account.balance
         initial_dest_balance = empty_account.balance
         
@@ -167,14 +173,24 @@ class TestBankAccountTransfers:
         assert funded_account.balance == initial_source_balance, "Source balance changed"
         assert empty_account.balance == initial_dest_balance, "Destination balance changed"
 
-    def test_should_update_both_balances_when_transfer_is_valid(self, funded_account, empty_account):
+    @patch('banking.domain.bank_account.datetime')
+    def test_should_update_both_balances_when_transfer_is_valid(self, mock_datetime, funded_account, empty_account):
         """Test transferring a positive amount between accounts."""
+        from datetime import datetime
+        
+        mock_datetime.now.return_value = datetime(2024, month=7, day=8, hour=12)
+        
         funded_account.transfer(50, empty_account)
         assert funded_account.balance == 50, "Source account balance incorrect after transfer"
         assert empty_account.balance == 50, "Destination account balance incorrect after transfer"
 
-    def test_should_transfer_all_funds_when_amount_equals_balance(self, funded_account, empty_account):
+    @patch('banking.domain.bank_account.datetime')
+    def test_should_transfer_all_funds_when_amount_equals_balance(self, mock_datetime, funded_account, empty_account):
         """Test transferring the entire balance works correctly."""
+        from datetime import datetime
+        
+        mock_datetime.now.return_value = datetime(2024, month=7, day=8, hour=12)
+        
         funded_account.transfer(100, empty_account)
         assert funded_account.balance == 0, "Source account should have zero balance"
         assert empty_account.balance == 100, "Destination should receive full amount"

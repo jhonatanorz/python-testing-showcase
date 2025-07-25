@@ -1,0 +1,1 @@
+"""Shared exceptions tests package.""" 

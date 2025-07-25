@@ -1,7 +1,7 @@
 """Shared fixtures and configuration for all tests."""
 
 import pytest
-from src.bank_account import BankAccount
+from banking.domain.bank_account import BankAccount
 
 
 @pytest.fixture
@@ -16,3 +16,10 @@ def funded_account():
     account = BankAccount()
     account.deposit(100)
     return account 
+
+@pytest.fixture
+def inactive_account():
+    """Fixture providing a bank account that is deactivated."""
+    account = BankAccount()
+    account.deactivate()
+    return account
